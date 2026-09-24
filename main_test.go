@@ -507,7 +507,7 @@ func TestBridgeIOEndsOnContextCancel(t *testing.T) {
 // mbsync/notmuch and a real HTTP port to exercise end to end), so this
 // exercises the cancellation wiring directly with an IOTransport standing
 // in for stdin.
-// TestBridgeReportsNoDaemonForStaleSocket covers a stale mcp.sock left by an
+// TestBridgeReportsNoDaemonForStaleSocket covers a stale socket file left by an
 // unclean exit. main picks bridge mode on the file existing, so without a
 // distinguishable dial failure "stdio" would exit 1 with "connection
 // refused" until someone deleted the file by hand. This checks the error

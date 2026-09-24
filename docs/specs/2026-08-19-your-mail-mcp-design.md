@@ -483,8 +483,10 @@ sections 5 and "Invariants" is unchanged.
 
 The container is the whole system: sync, index and every client interface
 live in one process. `serve` is the daemon. It syncs on the ticker, listens
-on a Unix socket at `INDEX/mcp.sock` for local clients, and opens the HTTP
-listener only when `PUBLIC_URL` is set. Without `PUBLIC_URL` there is no
+on a Unix socket at `/tmp/your-mail-mcp.sock` for local clients, and opens the
+HTTP listener only when `PUBLIC_URL` is set. The socket stays off every mounted
+volume: Docker Desktop's file sharing cannot bind a Unix socket on a host
+directory, and `docker exec` sessions share the container's `/tmp`. Without `PUBLIC_URL` there is no
 listener and no OAuth; with it, `OAUTH_PASSPHRASE` is required as before.
 
 `stdio` is how a local client attaches. If the socket exists, it copies

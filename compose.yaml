@@ -1,6 +1,6 @@
 services:
   your-mail-mcp:
-    image: ghcr.io/wildsurfer/your-mail-mcp:latest
+    image: ${YOUR_MAIL_MCP_IMAGE:-ghcr.io/wildsurfer/your-mail-mcp:latest}
     container_name: your-mail-mcp
     command: serve
     restart: unless-stopped

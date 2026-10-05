@@ -182,7 +182,26 @@ semantics, and there is no mbsync to shell out to.
 
 ## Building it yourself
 
-CI builds, tests and publishes every image, so nobody has to — but it is one
-command if you want to: `docker build -t your-mail-mcp .` for the container,
-or `go build` for the binary (Go 1.27, with the three tools above on PATH for
-the tests).
+Build a test image from the repository checkout with a tag for your registry:
+
+```bash
+export YOUR_MAIL_MCP_IMAGE=registry.example.com/your-mail-mcp:http-discovery-test
+docker build -t "$YOUR_MAIL_MCP_IMAGE" .
+docker push "$YOUR_MAIL_MCP_IMAGE"
+```
+
+Use this checkout's `compose.yaml` in the deployment directory containing
+`accounts.json` and `.env`. Set `YOUR_MAIL_MCP_IMAGE` to the same tag in `.env`,
+then run:
+
+```bash
+docker compose pull your-mail-mcp
+docker compose up -d your-mail-mcp
+```
+
+Compose uses the upstream image when `YOUR_MAIL_MCP_IMAGE` is unset. For a
+test on the build machine, the locally built image can be used directly with
+`docker compose up -d --pull never your-mail-mcp`.
+
+For the binary, use `go build` with Go 1.27. The tests need notmuch, mbsync,
+and w3m on PATH.

@@ -581,7 +581,12 @@ func newHTTPHandler(o *oauthServer, m *mcp.Server, srv *Server) http.Handler {
 	mux.HandleFunc("/authorize", o.handleAuthorize)
 	mux.HandleFunc("/token", o.handleToken)
 
-	streamable := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return m }, nil)
+	// Protocol 2026-07-28 requires stateless HTTP. Mail and sync state live in
+	// srv, so tools do not need an MCP session to retain that state.
+	streamable := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return m }, &mcp.StreamableHTTPOptions{
+		Stateless:                    true,
+		PropagateRequestCancellation: true,
+	})
 	mux.Handle("/mcp", requireBearer(o, streamable))
 	// Raw attachment bytes for anything too big for a tool response. A
 	// bearer token works for scripted callers; a signed link works in a
